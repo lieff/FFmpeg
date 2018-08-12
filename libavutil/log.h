@@ -231,7 +231,7 @@ typedef struct AVClass {
  * @param fmt The format string (printf-compatible) that specifies how
  *        subsequent arguments are converted to output.
  */
-void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
+#define av_log(avcl, level, fmt, ...)
 
 
 /**
@@ -249,7 +249,7 @@ void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
  *        subsequent arguments are converted to output.
  * @param vl The arguments referenced by the format string.
  */
-void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
+#define av_vlog(avcl, level, fmt, vl)
 
 /**
  * Get the current log level
@@ -258,7 +258,7 @@ void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
  *
  * @return Current log level
  */
-int av_log_get_level(void);
+#define av_log_get_level() AV_LOG_QUIET
 
 /**
  * Set the log level
@@ -267,7 +267,7 @@ int av_log_get_level(void);
  *
  * @param level Logging level
  */
-void av_log_set_level(int level);
+#define av_log_set_level(level)
 
 /**
  * Set the logging callback
@@ -279,23 +279,7 @@ void av_log_set_level(int level);
  *
  * @param callback A logging function with a compatible signature.
  */
-void av_log_set_callback(void (*callback)(void*, int, const char*, va_list));
-
-/**
- * Default logging callback
- *
- * It prints the message to stderr, optionally colorizing it.
- *
- * @param avcl A pointer to an arbitrary struct of which the first field is a
- *        pointer to an AVClass struct.
- * @param level The importance level of the message expressed using a @ref
- *        lavu_log_constants "Logging Constant".
- * @param fmt The format string (printf-compatible) that specifies how
- *        subsequent arguments are converted to output.
- * @param vl The arguments referenced by the format string.
- */
-void av_log_default_callback(void *avcl, int level, const char *fmt,
-                             va_list vl);
+#define av_log_set_callback(callback)
 
 /**
  * Return the context name
@@ -306,33 +290,6 @@ void av_log_default_callback(void *avcl, int level, const char *fmt,
  */
 const char* av_default_item_name(void* ctx);
 AVClassCategory av_default_get_category(void *ptr);
-
-/**
- * Format a line of log the same way as the default callback.
- * @param line          buffer to receive the formatted line
- * @param line_size     size of the buffer
- * @param print_prefix  used to store whether the prefix must be printed;
- *                      must point to a persistent integer initially set to 1
- */
-void av_log_format_line(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
-
-/**
- * Format a line of log the same way as the default callback.
- * @param line          buffer to receive the formatted line;
- *                      may be NULL if line_size is 0
- * @param line_size     size of the buffer; at most line_size-1 characters will
- *                      be written to the buffer, plus one null terminator
- * @param print_prefix  used to store whether the prefix must be printed;
- *                      must point to a persistent integer initially set to 1
- * @return Returns a negative value if an error occurred, otherwise returns
- *         the number of characters that would have been written for a
- *         sufficiently large buffer, not including the terminating null
- *         character. If the return value is not less than line_size, it means
- *         that the log message was truncated to fit the buffer.
- */
-int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
-                        char *line, int line_size, int *print_prefix);
 
 /**
  * Skip repeated messages, this requires the user app to use av_log() instead of
@@ -352,8 +309,8 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
  */
 #define AV_LOG_PRINT_LEVEL 2
 
-void av_log_set_flags(int arg);
-int av_log_get_flags(void);
+#define av_log_set_flags(arg)
+#define av_log_get_flags() 0
 
 /**
  * @}
